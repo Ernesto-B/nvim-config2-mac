@@ -32,41 +32,27 @@ return {
                     { icon = "󰪺 ", key  = "p", desc = "Recent Projects", action = function() LazyVim.pick("projects")() end, },
                     { icon = " ", key  = "o", desc = "Open GitHub", action = function()
                         local url = "https://github.com/Ernesto-B?tab=repositories"
-                        if vim.loop.os_uname().sysname:match("Windows") then
-                            -- on Windows use the builtin 'start' from cmd.exe:
-                            vim.fn.jobstart({ "cmd.exe", "/C", "start", "", url }, { detach = true })
-                        else
-                            -- on *nix use the default opener
-                            vim.fn.jobstart({ "xdg-open", url }, { detach = true })
-                        end
-                    end,
-                    },
+                        vim.fn.jobstart({ "open", "-a", "Firefox", url }, { detach = true })
+                    end },
+
                     -- Dynamic "Open GitHub (open GitHub repo of current project)"
                     { icon = " ", key = "O", desc = "Open GitHub Repo", action = function()
-                        -- 1) get git root; bail if not a git repo
                         local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
                         if vim.v.shell_error ~= 0 or git_root == "" then
                             vim.notify("Not in a git repo", vim.log.levels.ERROR)
                             return
                         end
-                        -- 2) get origin URL
                         local origin = vim.fn.systemlist("git -C " .. vim.fn.fnameescape(git_root) .. " config --get remote.origin.url")[1]
                         if origin == "" then
                             vim.notify("No remote.origin.url found", vim.log.levels.ERROR)
                             return
                         end
-                        -- 3) normalize to https
-                        --    e.g. git@github.com:USER/REPO.git → https://github.com/USER/REPO
                         local url = origin
                             :gsub("^git@([^:]+):", "https://%1/")
                             :gsub("%.git$", "")
-                        -- 4) open in browser
-                        if vim.loop.os_uname().sysname:match("Windows") then
-                            vim.fn.jobstart({ "cmd.exe", "/C", "start", "", url }, { detach = true })
-                        else
-                            vim.fn.jobstart({ "xdg-open", url }, { detach = true })
-                        end
+                        vim.fn.jobstart({ "open", "-a", "Firefox", url }, { detach = true })
                     end },
+
                     { icon = " ", key = "s", desc = "Restore Session", section = "session" },
                     { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
                     { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
