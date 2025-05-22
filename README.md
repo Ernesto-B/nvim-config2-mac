@@ -1,6 +1,7 @@
 # Nvim Config MK.2
 
 - Refer to the [documentation](https://lazyvim.github.io/installation) to view base config and plugins
+- [Original nvim-config2](https://github.com/Ernesto-B/nvim-config2)
 - Other plugins installed:
   - [blink](https://github.com/Saghen/blink.nvim)
   - [cloak](https://github.com/laytan/cloak.nvim)
