@@ -1,6 +1,7 @@
 # Nvim Config MK.2
 
 - Refer to the [documentation](https://lazyvim.github.io/installation) to view base config and plugins
+- [Original nvim-config2](https://github.com/Ernesto-B/nvim-config2)
 - Other plugins installed:
   - [blink](https://github.com/Saghen/blink.nvim)
   - [cloak](https://github.com/laytan/cloak.nvim)
@@ -21,13 +22,6 @@
 - `<leader>,` - view all buffers
 - View / search default nvim keymaps [here](https://vimdoc.sourceforge.net/htmldoc/vimindex.html)
 - Refer to this config's custom [Keymaps Cheat Sheet](#keymaps-cheat-sheet)
-
-## Fix for ".so is not a valid Win32 application"
-1. Check installation of "clang-cl" `:!where clang-cl`. If you get an error, you have to first install "clang-cl" via the Visual Studio Installer
-2. In the treesitter config, set the compiler as "clang-cl": `require 'nvim-treesitter.install'.compilers = { "clang-cl" }`. This should be right below your `require("nvim-treesitter.configs").setup({` and before `ensure_installed = {...}`
-3. Open the "x64 native tools command prompt for vs 2022" (requires having installed VS 2022 with dev tools. Can also install this via the Visual Studio installer)
-4. Open nvim in the x64 cmd prompt terminal, `:TSUninstall` all the languages you were having trouble with, and then `:TSInstall` them back
-5. Check installation of languages with `:TSInstallInfo`
 
 ## Keymaps Cheat Sheet
 ### Basics
