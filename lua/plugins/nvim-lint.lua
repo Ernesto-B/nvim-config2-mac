@@ -1,8 +1,8 @@
 return {
     "mfussenegger/nvim-lint",
     opts = {
-        -- when to trigger linting
-        events = { "BufWritePost", "BufReadPost", "InsertLeave" },
+        -- when to trigger linting. Comment out to prevent auto linting
+        -- events = { "BufWritePost", "BufReadPost", "InsertLeave" },
 
         linters_by_ft = {
             -- dotenv = { "dotenv-linter" }, -- .env files
@@ -22,4 +22,15 @@ return {
         -- define any custom linters (only needed for ones nvim-lint doesn’t ship)
         linters = {},
     },
+
+        -- Clear LazyVim's default autocmds on config load
+        config = function(_, opts)
+            require("lint").linters_by_ft = opts.linters_by_ft
+            require("lint").linters = opts.linters or {}
+
+            -- This is critical: remove all autocmds from the default LazyVim group
+        vim.api.nvim_clear_autocmds({
+            group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
+        })
+        end,
 }

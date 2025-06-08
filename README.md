@@ -7,6 +7,7 @@
   - [harpoon2](https://github.com/ThePrimeagen/harpoon/tree/harpoon2)
   - [incline](https://github.com/b0o/incline.nvim)
   - [markdown-preview](https://github.com/iamcco/markdown-preview.nvim)
+    -   Note that this might require running the following command in order to build the plugin<br> `:lua vim.fn["mkdp#util#install"]()`
   - [rest-nvim](https://github.com/rest-nvim/rest.nvim)
   - [smart-splits](https://github.com/mrjones2014/smart-splits.nvim)
   - [smear-cursor](https://github.com/sphamba/smear-cursor.nvim)
@@ -143,3 +144,6 @@
 - `<leader>sk` View and search keymaps
 - `:MarkdownPreview` Open md file in browser
 - `:Screenkey` Toggle Screenkey plugin
+
+## Tmux Keymaps
+https://tmuxcheatsheet.com/

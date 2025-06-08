@@ -25,8 +25,8 @@ keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 keymap.set("n", "J", "mzJ`z", { desc = "Cursor stays in place when merging lines" })
-keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down while keeping cursor in place" })
-keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up while keeping cursor in place" })
+-- keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down while keeping cursor in place" })
+-- keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up while keeping cursor in place" })
 keymap.set("n", "n", "nzzzv", { desc = "Jump to next search result centered and opening folds" })
 keymap.set("n", "N", "Nzzzv", { desc = "Jump to next search result centered and opening folds" })
 keymap.set("n", "=ap", "ma=ap'a", { desc = "Auto indent paragraph" })
@@ -154,16 +154,97 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- end, { desc = "Disable linting in this buffer" })
 
 -- Toggle nvim-lint globally (all buffers)
-keymap.set("n", "<leader>uN", function()
-    -- clear all lint autocmds
-    vim.api.nvim_clear_autocmds({ group = "nvim-lint" })
-    -- clear diagnostics in all open buffers
-    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-        vim.diagnostic.reset(nil, bufnr)
-    end
-    vim.notify("🔇 Linting disabled globally. Re-enable by restarting nvim", vim.log.levels.WARN)
-end, { desc = "Disable linting everywhere" })
+-- keymap.set("n", "<leader>uN", function()
+--     -- clear all lint autocmds
+--     vim.api.nvim_clear_autocmds({ group = "nvim-lint" })
+--     -- clear diagnostics in all open buffers
+--     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+--         vim.diagnostic.reset(nil, bufnr)
+--     end
+--     vim.notify("🔇 Linting disabled globally. Re-enable by restarting nvim", vim.log.levels.WARN)
+-- end, { desc = "Disable linting everywhere" })
 
+---------------------------------------------------------
+-- LINTING
+---------------------------------------------------------
+-- NOTE: not working
+local linting_enabled = false
+
+vim.keymap.set("n", "<leader>un", function()
+    -- Ensure nvim-lint is loaded
+    require("lazy").load({ plugins = { "nvim-lint" } })
+    local lint = require("lint")
+
+    if linting_enabled then
+        -- Disable autocmd group
+        vim.api.nvim_clear_autocmds({
+            group = vim.api.nvim_create_augroup("ManualLintEnable", { clear = true }),
+        })
+        linting_enabled = false
+        vim.notify("🔇 Linting on save disabled", vim.log.levels.WARN)
+    else
+        -- Enable autocmd group
+        vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+            group = vim.api.nvim_create_augroup("ManualLintEnable", { clear = true }),
+            callback = function()
+                vim.defer_fn(function()
+                    require("lint").try_lint()
+                end, 100)
+            end,        })
+        linting_enabled = true
+        vim.notify("✅ Linting on save enabled", vim.log.levels.INFO)
+    end
+end, { desc = "Toggle linting on save" })
+---------------------------------------------------------
+---------------------------------------------------------
+-- SNIPPETS
+---------------------------------------------------------
+-- -- Setup snippet expansion and navigation like VSCode
+-- local luasnip = require("luasnip")
+-- local cmp = require("cmp")
+--
+-- cmp.setup({
+--   snippet = {
+--     expand = function(args)
+--       require("luasnip").lsp_expand(args.body)
+--     end,
+--   },
+--
+--   mapping = cmp.mapping.preset.insert({
+--     -- Confirm completion with Enter
+--     ["<CR>"] = cmp.mapping.confirm({ select = true }),
+--
+--     -- Jump through snippets with Tab / Shift-Tab
+--     ["<Tab>"] = cmp.mapping(function(fallback)
+--       if cmp.visible() then
+--         cmp.select_next_item()
+--       elseif luasnip.expand_or_jumpable() then
+--         luasnip.expand_or_jump()
+--       else
+--         fallback()
+--       end
+--     end, { "i", "s" }),
+--
+--     ["<S-Tab>"] = cmp.mapping(function(fallback)
+--       if cmp.visible() then
+--         cmp.select_prev_item()
+--       elseif luasnip.jumpable(-1) then
+--         luasnip.jump(-1)
+--       else
+--         fallback()
+--       end
+--     end, { "i", "s" }),
+--   }),
+--
+--   -- Add your completion sources
+--   sources = {
+--     { name = "nvim_lsp" },
+--     { name = "luasnip" },
+--     { name = "buffer" },
+--     { name = "path" },
+--   },
+-- })
+---------------------------------------------------------
 
 -- Create or open a file anywhere
 keymap.set("n", "<leader>nf", function()

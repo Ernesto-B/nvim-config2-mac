@@ -4,4 +4,7 @@ return {
 
     -- Disable the help popup when pressing keys
     { "folke/which-key.nvim", enabled = false },
+
+    -- Disable completions and snippets
+    { "saghen/blink.cmp", enabled = true, }
 }
