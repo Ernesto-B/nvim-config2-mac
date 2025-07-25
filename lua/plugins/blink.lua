@@ -9,7 +9,7 @@ return {
       },
       cmdline = {
         enabled = false,        -- disable cmdline completions
-        providers = {},
+        -- providers = {},
       },
       appearance = {
         use_nvim_cmp_as_default = false,
