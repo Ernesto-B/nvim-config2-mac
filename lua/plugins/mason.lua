@@ -25,29 +25,29 @@ return {
     },
 
     -- Use mason-null-ls to install formatters & linters
-    {
-        "jay-babu/mason-null-ls.nvim",
-        dependencies = {
-            "jose-elias-alvarez/null-ls.nvim",
-            "williamboman/mason.nvim",
-        },
-        ft = { "*" }, -- load for all filetypes
-        opts = {
-            -- list all formatters & linters you want
-            ensure_installed = {
-                "black", -- python
-                "flake8", -- python linter
-                "prettier", -- js/css/html/markdown
-                "eslint_d", -- js/ts linter
-                "shellcheck", -- shell scripts
-                "golangci-lint", -- go linter
-                "gofumpt",  -- go formatter
-                "staticcheck", -- go static analysis
-                "dotenv-linter", -- .env files
-                "postgrestools", -- your custom tool
-                -- Add more here
-            },
-            automatic_installation = true, -- install/update on startup
-        },
-    },
+    -- {
+        -- "jay-babu/mason-null-ls.nvim",
+        -- dependencies = {
+            -- "jose-elias-alvarez/null-ls.nvim",
+            -- "williamboman/mason.nvim",
+        -- },
+        -- ft = { "*" }, -- load for all filetypes
+        -- opts = {
+            -- -- list all formatters & linters you want
+            -- ensure_installed = {
+                -- "black", -- python
+                -- "flake8", -- python linter
+                -- "prettier", -- js/css/html/markdown
+                -- "eslint_d", -- js/ts linter
+                -- "shellcheck", -- shell scripts
+                -- "golangci-lint", -- go linter
+                -- "gofumpt",  -- go formatter
+                -- "staticcheck", -- go static analysis
+                -- "dotenv-linter", -- .env files
+                -- "postgrestools", -- your custom tool
+                -- -- Add more here
+            -- },
+            -- automatic_installation = true, -- install/update on startup
+        -- },
+    -- },
 }

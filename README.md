@@ -12,7 +12,6 @@
   - [rest-nvim](https://github.com/rest-nvim/rest.nvim)
   - [smart-splits](https://github.com/mrjones2014/smart-splits.nvim)
   - [smear-cursor](https://github.com/sphamba/smear-cursor.nvim)
-  - [toggleterm](https://github.com/akinsho/toggleterm.nvim)
   - [wakatime](https://wakatime.com/neovim)
 
 ## Usage Tips:
