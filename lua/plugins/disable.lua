@@ -6,11 +6,11 @@ return {
     { "folke/which-key.nvim", enabled = false },
 
     -- Disable completions and snippets
-    { "saghen/blink.cmp", enabled = false, }
+    { "saghen/blink.cmp", enabled = false, },
 
     -- Disable Neogen
-    { "danymat/neogen", enabled = false, }
+    { "danymat/neogen", enabled = false, },
 
     -- Disable Smart Splits
-    { "mrjones2014/smart-splits.nvim", enabled = false, }
+    { "mrjones2014/smart-splits.nvim", enabled = false, },
 }
