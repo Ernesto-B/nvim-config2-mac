@@ -68,7 +68,7 @@ vim.g.autoformat = false -- Enable LazyVim auto formatting, <leader>cf to format
 ---------------------------------------------------------
 -- Snacks Animations
 ---------------------------------------------------------
-vim.g.snacks_animate = true -- Enable animations globally
+vim.g.snacks_animate = false -- Enable animations globally
 
 ---------------------------------------------------------
 -- Lualine
@@ -91,3 +91,4 @@ vim.opt.confirm = false -- Confirm to save changes before exiting modified buffe
 vim.opt.cursorline = true -- Highlight current line
 vim.opt.list = false -- Show invisible characters (eg. tabs)
 vim.opt.winminwidth = 5 -- Minimum window width
+vim.opt.guicursor = "n-v-c-i:block"
