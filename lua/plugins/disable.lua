@@ -15,5 +15,5 @@ return {
     { "mrjones2014/smart-splits.nvim", enabled = false, },
 
     -- Disable Smear Cursor
-    { "sphamba/smear-cursor.nvim", enabled = false, },
+    { "sphamba/smear-cursor.nvim", enabled = true, },
 }
