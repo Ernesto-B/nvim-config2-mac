@@ -24,6 +24,22 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
     callback = prune_shada_tmp,
 })
 
+-- Re-apply gruvbox after all plugins load. Must call gruvbox.setup() first —
+-- without it, vim sees the colorscheme as already active and skips recomputing
+-- highlight groups, leaving lualine with stale/default colors.
+vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyVimStarted",
+    once = true,
+    callback = function()
+        -- vim.schedule defers to the next event loop tick, after lualine's
+        -- ColorScheme autocmd is registered (lualine loads on VeryLazy, async)
+        vim.schedule(function()
+            require("gruvbox").setup({ transparent_mode = true })
+            vim.cmd("colorscheme gruvbox")
+        end)
+    end,
+})
+
 -- Treat *.env files as their own 'env' filetype
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = "*.env",

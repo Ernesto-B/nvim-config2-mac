@@ -5,6 +5,79 @@
 local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
 
+-- Toggle docs: blink completion docs when menu is open, noice signature popup otherwise
+keymap.set("i", "<C-d>", function()
+    local ok, blink = pcall(require, "blink.cmp")
+    if ok and blink.is_visible and blink.is_visible() then
+        if blink.is_documentation_visible and blink.is_documentation_visible() then
+            blink.hide_documentation()
+        else
+            blink.show_documentation()
+        end
+    else
+        -- Only count focusable floats — incline.nvim uses focusable=false and would
+        -- always make has_float true, blocking the re-show branch
+        local has_noice_float = false
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+            local cfg = vim.api.nvim_win_get_config(win)
+            if cfg.relative ~= "" and cfg.focusable ~= false then
+                has_noice_float = true
+                break
+            end
+        end
+        if has_noice_float then
+            require("noice").cmd("dismiss")
+        else
+            vim.schedule(function()
+                vim.lsp.buf.signature_help()
+            end)
+        end
+    end
+end, { desc = "Toggle docs (blink or noice)", noremap = true, silent = true })
+
+-- Terminal pane management:
+--   <C-t>  from editor  → open terminal (if not open) or jump to it
+--   <C-t>  from terminal → jump back to editor (terminal stays open)
+--   <C-q>  from anywhere → close the terminal window
+
+local function find_terminal_win()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "terminal" then
+            return win
+        end
+    end
+end
+
+keymap.set("n", "<C-t>", function()
+    if vim.bo.buftype == "terminal" then
+        vim.cmd("wincmd p")
+    else
+        local term_win = find_terminal_win()
+        if term_win then
+            vim.api.nvim_set_current_win(term_win)
+            vim.cmd("startinsert")
+        else
+            Snacks.terminal.toggle(nil, {
+                cwd = vim.fn.expand("%:p:h"),
+                win = { position = "bottom", height = 0.3 },
+            })
+        end
+    end
+end, { desc = "Focus/open terminal" })
+
+-- From terminal insert mode: return to editor without closing
+keymap.set("t", "<C-t>", "<C-\\><C-n><C-w>p", { desc = "Return to editor from terminal", noremap = true })
+
+-- Close the terminal window from anywhere
+keymap.set("n", "<C-q>", function()
+    local term_win = find_terminal_win()
+    if term_win then
+        vim.api.nvim_win_close(term_win, true)
+    end
+end, { desc = "Close terminal window" })
+keymap.set("t", "<C-q>", "<C-\\><C-n><cmd>lua vim.api.nvim_win_close(0, true)<CR>",
+    { desc = "Close terminal window", noremap = true })
+
 -- Netrw
 keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
@@ -67,7 +140,7 @@ keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "Delete to black hole regi
 -- keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "go to prev location‐list item, then center screen" })
 
 -- Toggle transparency
-local current = false
+local current = true
 keymap.set("n", "<leader>tb", function()
     current = not current
     require("gruvbox").setup({ transparent_mode = current })
@@ -77,174 +150,25 @@ end, { desc = "Toggle Gruvbox transparency" })
 -- keymap.set("n", "<C-a>", "gg<S-v>G", { desc = "Select all" })
 -- keymap.set("n", "ss", ":split<CR>", { desc = "Split current window horizontally" })
 
--- In terminal mode, pressing <C-x> will exit terminal mode
+-- Remove LazyVim's default floating terminal binding
+pcall(vim.keymap.del, "n", [[<C-\>]])
+pcall(vim.keymap.del, "t", [[<C-\>]])
+
+-- In terminal mode, pressing <C-x> will exit terminal mode (to normal)
 keymap.set("t", "<C-x>", [[<C-\><C-n>]], { noremap = true, silent = true })
 
 -- Pressing ! will begin a command
 keymap.set("n", "!", ":!")
 
----------------------------------------------------------
--- ALLOWING SMART SPLITS MOVEMENTS IN TERMINAL MODE
----------------------------------------------------------
--- Insert-mode in terminal: drop back to normal + move
-keymap.set("t", "<C-h>", function()
-    -- 1) Temporarily exit terminal insert mode
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", true)
-    -- 2) Use smart-splits to move left
-    require("smart-splits").move_cursor_left()
-end, { noremap = true, silent = true })
-
-keymap.set("t", "<C-j>", function()
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", true)
-    require("smart-splits").move_cursor_down()
-end, { noremap = true, silent = true })
-
-keymap.set("t", "<C-k>", function()
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", true)
-    require("smart-splits").move_cursor_up()
-end, { noremap = true, silent = true })
-
-keymap.set("t", "<C-l>", function()
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", true)
-    require("smart-splits").move_cursor_right()
-end, { noremap = true, silent = true })
-
--- Normal-mode in terminal buffers: directly invoke smart-splits
-vim.api.nvim_create_autocmd("TermOpen", {
-    callback = function()
-        local b = vim.api.nvim_get_current_buf()
-        keymap.set( "n", "<C-h>", require("smart-splits").move_cursor_left, { buffer = b, noremap = true, silent = true })
-        keymap.set( "n", "<C-j>", require("smart-splits").move_cursor_down, { buffer = b, noremap = true, silent = true })
-        keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up, { buffer = b, noremap = true, silent = true })
-        keymap.set( "n", "<C-l>", require("smart-splits").move_cursor_right, { buffer = b, noremap = true, silent = true })
-    end,
-})
-
----------------------------------------------------------
--- TERMINAL JUMPS AND KEYBINDINGS
----------------------------------------------------------
--- Whenever a new terminal opens, set up buffer-local <C-w>v
+-- Hide line numbers in terminal buffers
 vim.api.nvim_create_autocmd("TermOpen", {
     callback = function(args)
-        local bufnr = args.buf
-        local winid = vim.fn.bufwinid(bufnr)
+        local winid = vim.fn.bufwinid(args.buf)
         vim.api.nvim_win_set_option(winid, "number", false)
         vim.api.nvim_win_set_option(winid, "relativenumber", false)
-
-        -- In terminal-insert mode: first leave to normal, then vsplit+terminal
-        keymap.set("t", "<C-w>v",
-            -- exit to terminal-normal, then split & open a new terminal
-            "<C-\\><C-n><cmd>vsplit | terminal<CR> | i",
-            vim.tbl_extend("force", opts, { buffer = bufnr })
-        )
-
-        -- In terminal-normal mode: just do vsplit+terminal
-        keymap.set("n", "<C-w>v",
-            "<cmd>vsplit | terminal<CR> | i",
-            vim.tbl_extend("force", opts, { buffer = bufnr })
-        )
     end,
 })
----------------------------------------------------------
 
--- disable linting in the current buffer
--- keymap.set("n", "<leader>un", function()
---   vim.api.nvim_clear_autocmds({ group = "nvim-lint", buffer = 0 })
---   vim.notify("🔇 Linting disabled for this buffer", vim.log.levels.WARN)
--- end, { desc = "Disable linting in this buffer" })
-
--- Toggle nvim-lint globally (all buffers)
--- keymap.set("n", "<leader>uN", function()
---     -- clear all lint autocmds
---     vim.api.nvim_clear_autocmds({ group = "nvim-lint" })
---     -- clear diagnostics in all open buffers
---     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
---         vim.diagnostic.reset(nil, bufnr)
---     end
---     vim.notify("🔇 Linting disabled globally. Re-enable by restarting nvim", vim.log.levels.WARN)
--- end, { desc = "Disable linting everywhere" })
-
----------------------------------------------------------
--- LINTING
----------------------------------------------------------
--- NOTE: not working
-local linting_enabled = false
-
-vim.keymap.set("n", "<leader>un", function()
-    -- Ensure nvim-lint is loaded
-    require("lazy").load({ plugins = { "nvim-lint" } })
-    local lint = require("lint")
-
-    if linting_enabled then
-        -- Disable autocmd group
-        vim.api.nvim_clear_autocmds({
-            group = vim.api.nvim_create_augroup("ManualLintEnable", { clear = true }),
-        })
-        linting_enabled = false
-        vim.notify("🔇 Linting on save disabled", vim.log.levels.WARN)
-    else
-        -- Enable autocmd group
-        vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
-            group = vim.api.nvim_create_augroup("ManualLintEnable", { clear = true }),
-            callback = function()
-                vim.defer_fn(function()
-                    require("lint").try_lint()
-                end, 100)
-            end,        })
-        linting_enabled = true
-        vim.notify("✅ Linting on save enabled", vim.log.levels.INFO)
-    end
-end, { desc = "Toggle linting on save" })
----------------------------------------------------------
----------------------------------------------------------
--- SNIPPETS
----------------------------------------------------------
--- -- Setup snippet expansion and navigation like VSCode
--- local luasnip = require("luasnip")
--- local cmp = require("cmp")
---
--- cmp.setup({
---   snippet = {
---     expand = function(args)
---       require("luasnip").lsp_expand(args.body)
---     end,
---   },
---
---   mapping = cmp.mapping.preset.insert({
---     -- Confirm completion with Enter
---     ["<CR>"] = cmp.mapping.confirm({ select = true }),
---
---     -- Jump through snippets with Tab / Shift-Tab
---     ["<Tab>"] = cmp.mapping(function(fallback)
---       if cmp.visible() then
---         cmp.select_next_item()
---       elseif luasnip.expand_or_jumpable() then
---         luasnip.expand_or_jump()
---       else
---         fallback()
---       end
---     end, { "i", "s" }),
---
---     ["<S-Tab>"] = cmp.mapping(function(fallback)
---       if cmp.visible() then
---         cmp.select_prev_item()
---       elseif luasnip.jumpable(-1) then
---         luasnip.jump(-1)
---       else
---         fallback()
---       end
---     end, { "i", "s" }),
---   }),
---
---   -- Add your completion sources
---   sources = {
---     { name = "nvim_lsp" },
---     { name = "luasnip" },
---     { name = "buffer" },
---     { name = "path" },
---   },
--- })
----------------------------------------------------------
 
 -- Create or open a file anywhere
 keymap.set("n", "<leader>nf", function()

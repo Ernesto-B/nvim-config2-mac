@@ -17,14 +17,25 @@ return {
       },
       completion = {
         ghost_text = { enabled = true },
+        accept = {
+          auto_brackets = { enabled = true },
+        },
         menu = {
           draw = {
             treesitter = { "lsp" },
           },
         },
+        documentation = {
+          auto_show = true,
+          window = { border = "rounded" },
+        },
       },
+      signature = { enabled = false },
       keymap = {
-        preset = "enter",       -- VSCode style enter behavior
+        preset = "enter",
+        ["<Tab>"] = { "accept", "fallback" },
+        ["<C-j>"] = { "select_next", "fallback" },
+        ["<C-k>"] = { "select_prev", "fallback" },
       },
       -- don't override fields like `providers`, `omni`, `mapping`, or `ui`
     },

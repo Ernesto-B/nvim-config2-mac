@@ -12,12 +12,18 @@ return {
         explorer = { enabled = false },
         indent = { enabled = true },
         input = { enabled = true },
-        picker = { enabled = true },
+        picker = {
+            enabled = true,
+            sources = {
+                files = { hidden = true, ignored = false },
+            },
+        },
         notifier = { enabled = true },
         quickfile = { enabled = true },
         scope = { enabled = true },
         scroll = { enabled = true },
         statuscolumn = { enabled = true },
         words = { enabled = true },
+        terminal = { enabled = true },
     },
 }

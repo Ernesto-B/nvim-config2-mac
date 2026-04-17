@@ -2,24 +2,19 @@
 return {
     -- Ensure all LSP servers are installed
     {
-        "williamboman/mason-lspconfig.nvim",
-        dependencies = { "williamboman/mason.nvim" },
+        "mason-org/mason-lspconfig.nvim",
+        dependencies = { "mason-org/mason.nvim" },
         opts = {
             -- List every LSP server you use
             ensure_installed = {
-                "bashls", -- bash
-                "jsonls", -- json
-                "eslint", -- js/ts
-                "pyright", -- python
-                "gopls", -- go
-                "html", -- html
-                "cssls", -- css
-                "tailwindcss", -- tailwindcss
-                "lua_ls", -- lua
-                "rust_analyzer", -- rust
+                "pyright",  -- python (type checking)
+                "ruff",     -- python (linting + code actions)
+                "gopls",    -- go
+                "bashls",   -- bash
+                "jsonls",   -- json
+                "eslint",   -- js/ts
                 "clangd",   -- c/cpp
-                "rubocop",   -- ruby
-                -- Add more here
+                "lua_ls",   -- lua (for nvim config editing)
             },
         },
     },
