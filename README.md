@@ -8,6 +8,8 @@
   - [harpoon2](https://github.com/ThePrimeagen/harpoon/tree/harpoon2) — quick file marks
   - [incline](https://github.com/b0o/incline.nvim) — floating buffer name per window
   - [smear-cursor](https://github.com/sphamba/smear-cursor.nvim) — animated cursor motion
+  - [conform.nvim](https://github.com/stevearc/conform.nvim) — formatter runner (format-on-save + manual)
+  - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) — live markdown preview in browser
 
 ## Usage Tips:
 - `<Tab>` Accept completion suggestion
@@ -17,8 +19,15 @@
 - `<leader>,` - view all buffers
 - View / search default nvim keymaps [here](https://vimdoc.sourceforge.net/htmldoc/vimindex.html)
 - Refer to this config's custom [Keymaps Cheat Sheet](#keymaps-cheat-sheet)
-- LSP servers: pyright (Python), ruff (Python linting + code actions), gopls (Go), bashls, jsonls, eslint (JS/TS), clangd (C/C++), lua_ls
+- LSP servers: pyright (Python), ruff (Python linting + code actions), gopls (Go), bashls, jsonls, yamlls, eslint (JS/TS), clangd (C/C++), lua_ls, terraformls, dockerls, sqlls
 - Pyright auto-detects `.venv/` or `venv/` in the project root for virtual environments
+
+## Formatting (conform.nvim)
+- Manual format: `<leader>cf` (LazyVim's built-in, normal + visual mode)
+- Toggle format-on-save at runtime: `<leader>uf` (global) or `<leader>uF` (buffer-local)
+- Default behavior set in `lua/config/options.lua` → `vim.g.autoformat` (default `false`; set to `true` to format on every save)
+- Formatters configured per filetype in `lua/plugins/conform.lua`
+- Formatters auto-installed via Mason (see `lua/plugins/mason.lua`); `terraform_fmt` uses the system `terraform` binary
 
 ## Keymaps Cheat Sheet
 ### Basics
@@ -73,6 +82,9 @@
 - `gr` LSP: find references
 - `gd` LSP: go to definition
 - `<leader>ca` LSP: code actions (imports, fixes, refactors)
+- `<leader>cf` Format buffer or visual selection (conform.nvim, LSP fallback)
+- `<leader>uf` / `<leader>uF` Toggle format-on-save (global / buffer)
+- `<leader>cp` Toggle markdown preview in browser (markdown filetype)
 - `g;` / `g,` Jump to prev / next edit position
 - `<leader>fp` Browse projects
 - `<leader>fR` Browse recent files (project)

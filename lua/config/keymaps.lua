@@ -164,8 +164,9 @@ keymap.set("n", "!", ":!")
 vim.api.nvim_create_autocmd("TermOpen", {
     callback = function(args)
         local winid = vim.fn.bufwinid(args.buf)
-        vim.api.nvim_win_set_option(winid, "number", false)
-        vim.api.nvim_win_set_option(winid, "relativenumber", false)
+        if winid == -1 then return end
+        vim.wo[winid].number = false
+        vim.wo[winid].relativenumber = false
     end,
 })
 
@@ -186,16 +187,3 @@ end, { desc = "New file anywhere (with Tab completion)" })
 -- Save file, just like :w
 vim.api.nvim_create_user_command("W", "write", {})
 
--- AVAILABLE MAPPINGS (that I have come across)
-keymap.set("n", "<leader>e", "")
-keymap.set("n", "<leader>E", "")
-keymap.set("n", "<leader>sM", "")
-keymap.set("n", "<C-i>", "")
-keymap.set("n", "<C-I>", "")
-keymap.set("n", "U", "")
-keymap.set("n", "U", "")
-keymap.set("n", "Q", "")
-keymap.set("n", "<leader>fb", "")
-keymap.set("n", "<leader>fB", "")
-keymap.set("n", "<leader>ff", "")
--- keymap.set("n", "<leader>fF", "")

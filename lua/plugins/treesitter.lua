@@ -9,7 +9,7 @@ return {
                 "bash", "c", "cmake", "cpp", "css", "csv",
                 "dockerfile", "go", "gomod", "html", "java",
                 "javascript", "json", "lua", "markdown",
-                "python", "sql", "terraform", "typescript", "yaml",
+                "proto", "python", "sql", "terraform", "typescript", "yaml",
             },
             auto_install = true,
             highlight = { enable = true },

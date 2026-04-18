@@ -4,11 +4,7 @@ return {
     event = "VeryLazy",
     dependencies = { "ellisonleao/gruvbox.nvim" },
     config = function()
-        -- 1) Make sure gruvbox is loaded so .palette() is populated
-        vim.cmd([[colorscheme gruvbox]])
-
         local gruvbox = require("gruvbox")
-        -- 2) Grab the active palette (must call it as a function)
         local palette = gruvbox.palette
         -- pick a background—you can choose dark0_hard, dark0_soft, etc.
         local bg = palette.dark0_hard or palette.dark0

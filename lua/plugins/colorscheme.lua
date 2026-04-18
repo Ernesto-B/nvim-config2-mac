@@ -39,16 +39,6 @@ return {
                 overrides = {},
             })
             vim.cmd("colorscheme gruvbox")
-
-            vim.api.nvim_create_autocmd("User", {
-                pattern = "VeryLazy",
-                once = true,
-                callback = function()
-                    vim.schedule(function()
-                        vim.cmd("colorscheme gruvbox")
-                    end)
-                end,
-            })
         end,
     },
 }
