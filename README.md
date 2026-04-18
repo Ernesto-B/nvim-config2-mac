@@ -72,18 +72,8 @@
 
 ### Search & Navigation
 - `<leader><Space>` _Intentionally left unbound_ — reserved as an open slot for a future high-frequency action (LazyVim's default "Find Files (Root Dir)" is explicitly cleared in `lua/config/keymaps.lua`)
-- `<leader>pf` Find file from current working directory by name (includes hidden, excludes gitignored)
-- `<leader>ff` Find file from project root (LazyVim default — walks up to LSP root / `.git`)
-- `<leader>sg` Live grep in project
 - `s` Flash jump — type 2 chars of destination, pick label, teleport
 - `S` Flash treesitter — select by AST node
-- `<C-s>` In-file replace current word — opens `:%s/<word>/<word>/gI` pre-filled, move cursor left 3× to edit replacement
-- `<leader>s` _(visual)_ In-file replace selection — wraps selection into `:%s/\V<selection>//gI` pre-filled
-- `<leader>sr` Grug-far — multi-file search & replace with live preview
-- `<leader>ss` List functions/classes in file to jump to
-- `<leader>sw` Search for current symbol in workspace
-- `gr` LSP: find references across workspace
-- `gd` LSP: go to definition
 - `<leader>ca` LSP: code actions (imports, fixes, refactors)
 - `<leader>cf` Format buffer or visual selection (conform.nvim, LSP fallback)
 - `<leader>uf` / `<leader>uF` Toggle format-on-save (global / buffer)
@@ -94,12 +84,37 @@
 - `<leader>fe` Toggle file-explorer (project root)
 - `<leader>fE` Toggle file-explorer (pwd)
 
+### Find & Replace
+_Find files by name_
+- `<leader>ff` From project root (LazyVim default — walks up to LSP root / `.git`)
+- `<leader>pf` From current working directory (includes hidden, excludes gitignored)
+
+_Find text across the project (any word or phrase — not symbol-aware)_
+- `<leader>sg` Live grep
+- `<leader>sw` Grep the **word under cursor** (normal) or **visual selection**
+
+_Find symbols (LSP-aware — functions, classes, variables)_
+- `<leader>ss` List **symbols** in the current file
+- `<leader>sS` Search **symbols** across the workspace
+- `gd` Go to definition of **symbol** under cursor
+- `gr` Find references to **symbol** under cursor
+
+_Replace (plain text — not symbol-aware)_
+- `<C-s>` In-file replace. **Normal mode** replaces the word under cursor
+- `<leader>sr` Grug-far — project-wide search & replace with live preview (empty start)
+- `<leader>sR` Grug-far with the **word under cursor**
+
+_Rename (LSP-aware — scope- and import-aware)_
+- `<leader>cR` LSP rename the **symbol** under cursor across workspace. Uses the language server: shadowed names and unrelated same-spelled tokens in strings/comments stay untouched, and imports/exports update automatically
+
 ### Git
 - `<leader>gg` Open lazygit (root dir)
 - `<leader>gs` Git status
 - `<leader>gf` Git file history
 - `<leader>gl` Git log
 - `<leader>gL` Git log (cwd)
+- `<leader>gi` Git view open issues
+- `<leader>gI` Git view all issues
 - `<leader>gb` Git blame (line)
 - `<leader>gY` Copy GitHub URL of file/line
 

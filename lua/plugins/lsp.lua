@@ -44,6 +44,11 @@ return {
                             function() Snacks.rename.rename_file() end,
                             desc = "Rename current file",
                         },
+                        {
+                            "<leader>rw",
+                            function() vim.lsp.buf.rename() end,
+                            desc = "Rename symbol across workspace (LSP)",
+                        },
                     },
                 },
                 ruff = {

@@ -128,16 +128,29 @@ keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape everything with <C-c>" })
 ---------------------------------------------------------
 -- FIND AND REPLACE
 ---------------------------------------------------------
+-- Normal: replace the word under cursor. Visual: replace the selection.
 keymap.set(
     "n", "<C-s>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-    { desc = "Simple find and replace in current file" }
+    { desc = "Replace current word in file" }
+)
+keymap.set(
+    "v", "<C-s>", [["zy:%s/\V<C-r>z//gI<Left><Left><Left>]],
+    { desc = "Replace visual selection in file", silent = false }
 )
 
--- In visual mode, wrap the selected text into a :s///g
-keymap.set("v","<leader>s", [["zy:%s/\V<C-r>z//gI<Left><Left><Left>]], {
-  desc = "Replace visual selection across lines",
-  silent = false,
-})
+-- Grug-far pre-filled with <cword> + --word-regexp for whole-word matches
+-- across the workspace. Ripgrep-powered preview UI.
+keymap.set("n", "<leader>sR", function()
+    require("grug-far").open({
+        prefills = {
+            search = vim.fn.expand("<cword>"),
+            flags = "--word-regexp",
+        },
+    })
+end, { desc = "Grug-far: replace current word (workspace, word-boundary)" })
+
+-- LSP-aware rename of the symbol under cursor across the workspace.
+keymap.set("n", "<leader>cR", vim.lsp.buf.rename, { desc = "LSP rename symbol (workspace)" })
 ---------------------------------------------------------
 
 keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "Delete to black hole register to not replace last yank" })
