@@ -75,14 +75,14 @@
 - `<leader>pf` Find file from current working directory by name (includes hidden, excludes gitignored)
 - `<leader>ff` Find file from project root (LazyVim default — walks up to LSP root / `.git`)
 - `<leader>sg` Live grep in project
-- `<leader>sr` Grug-far (advanced search and replace across multiple files)
-- `<C-s>` Simple search & replace current word in file
-- `<leader>s` Search & replace selection in file
-- `<C-s>` in search mode — activate flash search
-- `s` Flash search file
-- `<leader>ss` List functions in file (symbols)
+- `s` Flash jump — type 2 chars of destination, pick label, teleport
+- `S` Flash treesitter — select by AST node
+- `<C-s>` In-file replace current word — opens `:%s/<word>/<word>/gI` pre-filled, move cursor left 3× to edit replacement
+- `<leader>s` _(visual)_ In-file replace selection — wraps selection into `:%s/\V<selection>//gI` pre-filled
+- `<leader>sr` Grug-far — multi-file search & replace with live preview
+- `<leader>ss` List functions/classes in file to jump to
 - `<leader>sw` Search for current symbol in workspace
-- `gr` LSP: find references
+- `gr` LSP: find references across workspace
 - `gd` LSP: go to definition
 - `<leader>ca` LSP: code actions (imports, fixes, refactors)
 - `<leader>cf` Format buffer or visual selection (conform.nvim, LSP fallback)
@@ -110,7 +110,7 @@
 - `<leader>d` Delete into black-hole register
 - `]a` Go to next function parameter start
 - `]m` Go to next function
-- `<leader>cR` Rename current file
+- `<leader>cr` Rename current file (Snacks input box — also notifies LSP to update imports)
 - `vis` Select entire paragraph
 - `<leader>nf` Create new file at directory
 

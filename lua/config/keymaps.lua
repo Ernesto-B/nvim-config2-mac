@@ -190,6 +190,7 @@ keymap.set("n", "<leader>nf", function()
         end)
 end, { desc = "New file anywhere (with Tab completion)" })
 
+
 -- Save file, just like :w
 vim.api.nvim_create_user_command("W", "write", {})
 
