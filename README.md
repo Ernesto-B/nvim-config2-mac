@@ -41,11 +41,12 @@
 - `ciw` / `diw` / `viw` Change / delete / select inner word
 - `daw` Delete a word and surrounding whitespace
 - `vis` / `dis` / `cis` Select / delete / change paragraph
-- ~~`<C-q>` Enter Visual-Block mode~~ — remapped to close terminal; use `<C-v>` instead
 
 ### Splits & Navigation (smart-splits)
 - `<C-h>` / `<C-j>` / `<C-k>` / `<C-l>` Move between nvim splits or tmux panes
-- `<A-h>` / `<A-j>` / `<A-k>` / `<A-l>` Resize current split
+- `<C-w>>` / `<C-w><` Resize split wider / narrower (vim built-in)
+- `<C-w>+` / `<C-w>-` Resize split taller / shorter (vim built-in)
+- `<C-w>=` Equalize all split sizes (vim built-in)
 
 ### Window & Buffers
 - `<leader>pv` Open Netrw explorer
@@ -60,7 +61,8 @@
 - `n` / `N` Next / previous search + center/fold open
 - `za` / `zi` Toggle current fold / all folds
 - `<leader>uS` Toggle smooth scroll
-- `<leader>uz` Toggle Zen mode _(requires zen-mode LazyVim extra — not installed)_
+- `<leader>uw` Toggle line wrap (LazyVim default)
+- `<leader>uz` Toggle Zen mode _(requires zen-mode LazyVim extra)_
 - `<leader>uD` Toggle dim background _(requires twilight LazyVim extra — not installed)_
 - `<leader>tb` Toggle window transparency
 - `<leader>uc` Toggle conceal level
@@ -69,16 +71,17 @@
 - `<leader>cs` Display all symbols in file
 
 ### Search & Navigation
-- `<leader><Space>` / `<leader>pf` Find file from project root (includes hidden + gitignored files)
+- `<leader><Space>` _Intentionally left unbound_ — reserved as an open slot for a future high-frequency action (LazyVim's default "Find Files (Root Dir)" is explicitly cleared in `lua/config/keymaps.lua`)
+- `<leader>pf` Find file from current working directory by name (includes hidden, excludes gitignored)
+- `<leader>ff` Find file from project root (LazyVim default — walks up to LSP root / `.git`)
 - `<leader>sg` Live grep in project
 - `<leader>sr` Grug-far (advanced search and replace across multiple files)
 - `<C-s>` Simple search & replace current word in file
-- `<M-s>` Simple search & replace current word in line
 - `<leader>s` Search & replace selection in file
 - `<C-s>` in search mode — activate flash search
 - `s` Flash search file
 - `<leader>ss` List functions in file (symbols)
-- `<leader>sw` Search for symbol in workspace
+- `<leader>sw` Search for current symbol in workspace
 - `gr` LSP: find references
 - `gd` LSP: go to definition
 - `<leader>ca` LSP: code actions (imports, fixes, refactors)

@@ -81,17 +81,15 @@ keymap.set("t", "<C-q>", "<C-\\><C-n><cmd>lua vim.api.nvim_win_close(0, true)<CR
 -- Netrw
 keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
--- Find files from project root with Snacks picker
+-- File picker scoped to the current working directory.
 vim.keymap.set("n", "<leader>pf", function()
-    local root = require("lazyvim.util").root()
-    LazyVim.pick("files", { cwd = root })()
-end, { desc = "Find files from project root" })
+    LazyVim.pick("files", { cwd = vim.fn.getcwd() })()
+end, { desc = "Find files from cwd" })
 
--- remove the default Snacks/Line-move mappings
--- keymap.del("i", "<M-j>")
--- keymap.del("i", "<M-k>")
--- keymap.del({ "n", "v" }, "<M-j>")
--- keymap.del({ "n", "v" }, "<M-k>")
+-- <leader><Space> is intentionally unbound. LazyVim assigns it to "Find Files
+-- (Root Dir)" by default; we clear that here so the slot stays free for a
+-- future high-frequency action. See README.
+pcall(vim.keymap.del, "n", "<leader><Space>")
 
 -- Moving selected lines up and down
 keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -106,6 +104,24 @@ keymap.set("n", "=ap", "ma=ap'a", { desc = "Auto indent paragraph" })
 
 keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Copy selected text to + buffer (clipboard)" })
 
+-- Override LazyVim's <leader>gY to notify on success. The default sets notify=false
+-- and uses a custom `open` that silently copies, so there's no user feedback.
+keymap.set({ "n", "x" }, "<leader>gY", function()
+    Snacks.gitbrowse({
+        open = function(url)
+            vim.fn.setreg("+", url)
+            vim.notify("Copied GitHub URL: " .. url, vim.log.levels.INFO, { title = "Git Browse" })
+        end,
+        notify = false,
+    })
+end, { desc = "Git Browse (copy URL + notify)" })
+
+-- Document symbols picker. Normally provided by LazyVim's snacks_picker extra,
+-- which isn't enabled in lazyvim.json — wire it up manually.
+keymap.set("n", "<leader>ss", function()
+    Snacks.picker.lsp_symbols({ filter = LazyVim.config.kind_filter })
+end, { desc = "LSP Symbols (document)" })
+
 keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape everything with <C-c>" })
 
 
@@ -117,22 +133,12 @@ keymap.set(
     { desc = "Simple find and replace in current file" }
 )
 
--- In visual mode, wrap the selected text into a :s///g 
+-- In visual mode, wrap the selected text into a :s///g
 keymap.set("v","<leader>s", [["zy:%s/\V<C-r>z//gI<Left><Left><Left>]], {
   desc = "Replace visual selection across lines",
   silent = false,
 })
-
-
-keymap.set(
-    "n",
-    "<M-s>",
-    [[:s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>]],
-    { desc = "Simple find and replace in current line" }
-)
 ---------------------------------------------------------
-
-keymap.set("n", "<M-z>", ":set wrap!<CR>", { desc = "Toggle line wrap" })
 
 keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "Delete to black hole register to not replace last yank" })
 
