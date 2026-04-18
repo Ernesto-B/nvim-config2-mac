@@ -3,6 +3,9 @@ return {
     branch = "master",
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
+    dependencies = {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+    },
     config = function()
         require("nvim-treesitter.configs").setup({
             ensure_installed = {
@@ -14,6 +17,18 @@ return {
             auto_install = true,
             highlight = { enable = true },
             indent = { enable = true },
+            textobjects = {
+                move = {
+                    enable = true,
+                    set_jumps = true,
+                    goto_next_start = {
+                        ["]a"] = "@parameter.inner",
+                    },
+                    goto_previous_start = {
+                        ["[a"] = "@parameter.inner",
+                    },
+                },
+            },
         })
         vim.treesitter.language.register("bash", "env")
     end,

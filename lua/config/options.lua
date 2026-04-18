@@ -50,6 +50,11 @@ vim.g.trouble_lualine = true -- Show current doc symbols location from Trouble i
 vim.g.netrw_liststyle = 0
 
 ---------------------------------------------------------
+-- UI Behavior
+---------------------------------------------------------
+vim.opt.showcmd = false -- Don't show partial commands (e.g. `m<letter>`) in statusline via noice
+
+---------------------------------------------------------
 -- Other
 ---------------------------------------------------------
 vim.opt.confirm = false      -- Confirm to save changes before exiting modified buffer
