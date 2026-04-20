@@ -18,6 +18,11 @@ vim.opt.updatetime = 500 -- Time before CursorHold fires (default 4000); lower =
 ---------------------------------------------------------
 vim.opt.colorcolumn = "80"   -- Vertical line at col=80
 vim.opt.termguicolors = true -- True color support
+-- Must be deferred: LazyVim re-enables hlsearch during plugin init (after this file runs)
+vim.api.nvim_create_autocmd("VimEnter", {
+    once = true,
+    callback = function() vim.opt.hlsearch = false end,
+})
 
 ---------------------------------------------------------
 -- Indentation (override LazyVim's default of 2)
