@@ -128,14 +128,18 @@ keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape everything with <C-c>" })
 ---------------------------------------------------------
 -- FIND AND REPLACE
 ---------------------------------------------------------
--- Normal: replace the word under cursor. Visual: replace the selection.
+-- Normal: replace the word under cursor across the whole file.
+-- Visual: find-and-replace scoped to the highlighted selection only.
+-- The ':' in visual mode auto-prepends '<,'> so the range covers the
+-- selected lines; \%V tightens matching to the exact selection area
+-- (matters for character-wise v — for linewise V it's a no-op).
 keymap.set(
     "n", "<C-s>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
     { desc = "Replace current word in file" }
 )
 keymap.set(
-    "v", "<C-s>", [["zy:%s/\V<C-r>z//gI<Left><Left><Left>]],
-    { desc = "Replace visual selection in file", silent = false }
+    "v", "<C-s>", [[:s/\%V//gI<Left><Left><Left><Left>]],
+    { desc = "Replace within highlighted selection", silent = false }
 )
 
 -- Grug-far pre-filled with <cword> + --word-regexp for whole-word matches

@@ -100,7 +100,7 @@ _Find symbols (LSP-aware — functions, classes, variables)_
 - `gr` Find references to **symbol** under cursor
 
 _Replace (plain text — not symbol-aware)_
-- `<C-s>` In-file replace. **Normal mode** replaces the word under cursor
+- `<C-s>` In-file replace. **Normal mode:** replace the word under cursor across the whole file. **Visual mode:** replace only within the highlighted selection (scoped by `'<,'>` range + `\%V` atom, so works correctly for both line-wise `V` and character-wise `v` selections)
 - `<leader>sr` Grug-far — project-wide search & replace with live preview (empty start)
 - `<leader>sR` Grug-far with the **word under cursor**
 

@@ -16,12 +16,16 @@ return {
             -- Re-enable cloak when a matched buffer leaves the window.
             cloak_on_leave = false,
             patterns = {
-                -- KEY=value style: dotenv, wrangler, AWS credentials ini
+                -- KEY=value / key = value style: dotenv, wrangler, tfvars,
+                -- AWS credentials ini. Terraform .tfvars uses HCL assignments
+                -- like `db_password = "secret"` — the `=.+` pattern masks it.
                 {
                     file_pattern = {
                         ".env*",
                         "wrangler.toml",
                         ".dev.vars",
+                        "*.tfvars",
+                        "*.auto.tfvars",
                         "*/.aws/credentials",
                         "credentials",
                     },

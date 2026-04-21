@@ -67,3 +67,12 @@ vim.opt.cursorline = true    -- Highlight current line
 vim.opt.list = false         -- Show invisible characters (eg. tabs)
 vim.opt.winminwidth = 5      -- Minimum window width
 vim.opt.guicursor = "n-v-c-i:block"
+
+---------------------------------------------------------
+-- Security
+---------------------------------------------------------
+-- Disable modelines. A file can embed `vim:` commands in comments
+-- that Vim executes on open (CVE-2019-12735 class). Opening an
+-- untrusted file should not execute arbitrary editor commands.
+vim.opt.modeline = false
+vim.opt.modelines = 0

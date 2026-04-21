@@ -8,56 +8,60 @@ return {
                 end,
                 -- Font Style = ANSI Shadow
                 header = [[
-██╗   ██╗ ██████╗ ██╗   ██╗    ███╗   ██╗███████╗██████╗ ██████╗ 
+██╗   ██╗ ██████╗ ██╗   ██╗    ███╗   ██╗███████╗██████╗ ██████╗
 ╚██╗ ██╔╝██╔═══██╗██║   ██║    ████╗  ██║██╔════╝██╔══██╗██╔══██╗
  ╚████╔╝ ██║   ██║██║   ██║    ██╔██╗ ██║█████╗  ██████╔╝██║  ██║
   ╚██╔╝  ██║   ██║██║   ██║    ██║╚██╗██║██╔══╝  ██╔══██╗██║  ██║
    ██║   ╚██████╔╝╚██████╔╝    ██║ ╚████║███████╗██║  ██║██████╔╝
-   ╚═╝    ╚═════╝  ╚═════╝     ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═════╝ 
- ]].. "\n  cwd: " .. vim.fn.getcwd(),
+   ╚═╝    ╚═════╝  ╚═════╝     ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═════╝
+ ]].. "\n  cwd: " .. vim.fn.getcwd(),
                 -- stylua: ignore
                 ---@type snacks.dashboard.Item[]
                 keys = {
-                    { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
-                    { icon = "", key = "n", desc = "New File", action = function()
+                    { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+                    { icon = "", key = "n", desc = "New File", action = function()
                         vim.ui.input({ prompt = "New file name: " }, function(fname)
                             if not fname or fname == "" then return end
                             vim.cmd("edit " .. vim.fn.fnameescape(fname))
                         end)
                     end,
                     },
-                    { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-                    { icon = " ", key = "e", desc = "Open File Tree", action = function() Snacks.explorer({ cwd = LazyVim.root() }) end },
-                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+                    { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+                    { icon = " ", key = "e", desc = "Open File Tree", action = function() Snacks.explorer({ cwd = LazyVim.root() }) end },
+                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
                     { icon = "󰪺 ", key  = "p", desc = "Recent Projects", action = function() LazyVim.pick("projects")() end, },
-                    { icon = " ", key  = "o", desc = "Open GitHub", action = function()
+                    { icon = " ", key  = "o", desc = "Open GitHub", action = function()
                         local url = "https://github.com/Ernesto-B?tab=repositories"
                         vim.fn.jobstart({ "open", "-a", "Firefox", url }, { detach = true })
                     end },
 
                     -- Dynamic "Open GitHub (open GitHub repo of current project)"
-                    { icon = " ", key = "O", desc = "Open GitHub Repo", action = function()
-                        local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-                        if vim.v.shell_error ~= 0 or git_root == "" then
+                    { icon = " ", key = "O", desc = "Open GitHub Repo", action = function()
+                        local git_root = vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })[1]
+                        if vim.v.shell_error ~= 0 or not git_root or git_root == "" then
                             vim.notify("Not in a git repo", vim.log.levels.ERROR)
                             return
                         end
-                        local origin = vim.fn.systemlist("git -C " .. vim.fn.fnameescape(git_root) .. " config --get remote.origin.url")[1]
-                        if origin == "" then
+                        local origin = vim.fn.systemlist({ "git", "-C", git_root, "config", "--get", "remote.origin.url" })[1]
+                        if not origin or origin == "" then
                             vim.notify("No remote.origin.url found", vim.log.levels.ERROR)
                             return
                         end
                         local url = origin
                             :gsub("^git@([^:]+):", "https://%1/")
                             :gsub("%.git$", "")
+                        if not url:match("^https://") then
+                            vim.notify("Refusing to open non-https URL: " .. url, vim.log.levels.ERROR)
+                            return
+                        end
                         vim.fn.jobstart({ "open", "-a", "Firefox", url }, { detach = true })
                     end },
 
-                    { icon = " ", key = "s", desc = "Restore Session", section = "session" },
-                    { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+                    { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+                    { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
                     { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
-                    -- { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
-                    { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+                    -- { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
+                    { icon = " ", key = "q", desc = "Quit", action = ":qa" },
                 },
             },
         },
