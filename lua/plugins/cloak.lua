@@ -16,20 +16,42 @@ return {
             -- Re-enable cloak when a matched buffer leaves the window.
             cloak_on_leave = false,
             patterns = {
+                -- KEY=value style: dotenv, wrangler, AWS credentials ini
                 {
-                    -- Match any file starting with '.env'.
-                    -- This can be a table to match multiple file patterns.
-                    file_pattern = ".env*",
-                    "wrangler.toml",
-                    ".dev.vars",
-                    -- Match an equals sign and any character after it.
-                    -- This can also be a table of patterns to cloak,
-                    -- example: cloak_pattern = { ':.+', '-.+' } for yaml files.
+                    file_pattern = {
+                        ".env*",
+                        "wrangler.toml",
+                        ".dev.vars",
+                        "*/.aws/credentials",
+                        "credentials",
+                    },
                     cloak_pattern = "=.+",
-                    -- A function, table or string to generate the replacement.
-                    -- The actual replacement will contain the 'cloak_character'
-                    -- where it doesn't cover the original text.
-                    -- If left empty the legacy behavior of keeping the first character is retained.
+                    replace = nil,
+                },
+                -- key: value / key = value style: secrets manifests
+                {
+                    file_pattern = {
+                        "secrets.yaml",
+                        "secrets.yml",
+                        "*.secrets.yaml",
+                        "*.secrets.yml",
+                        "secrets.json",
+                    },
+                    cloak_pattern = { ":%s*.+", "=%s*.+" },
+                    replace = nil,
+                },
+                -- Full-file cover for private key material. `.+` matches any
+                -- non-empty line, so the whole file is masked. Public keys
+                -- (*.pub) are intentionally excluded.
+                {
+                    file_pattern = {
+                        "*.pem",
+                        "*.key",
+                        "id_rsa",
+                        "id_ed25519",
+                        "id_ecdsa",
+                    },
+                    cloak_pattern = ".+",
                     replace = nil,
                 },
             },
