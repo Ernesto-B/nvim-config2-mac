@@ -19,8 +19,9 @@
 - `<leader>,` - view all buffers
 - View / search default nvim keymaps [here](https://vimdoc.sourceforge.net/htmldoc/vimindex.html)
 - Refer to this config's custom [Keymaps Cheat Sheet](#keymaps-cheat-sheet)
-- LSP servers: pyright (Python), ruff (Python linting + code actions), gopls (Go), bashls, jsonls, yamlls, eslint (JS/TS), clangd (C/C++), lua_ls, terraformls, dockerls, sqlls
+- LSP servers: pyright (Python), ruff (Python linting + code actions), gopls (Go), golangci_lint_ls (Go meta-linter), jdtls (Java), bashls, jsonls, yamlls, eslint (JS/TS), clangd (C/C++), lua_ls, terraformls, dockerls, sqlls
 - Pyright auto-detects `.venv/` or `venv/` in the project root for virtual environments
+- Go tooling: gopls configured with staticcheck + extra analyses + inlay hints + auto-import completion; `goimports` and `gofumpt` run via conform; `golangci-lint` provides extended diagnostics via LSP; `delve` (dlv) installed as the debugger binary (not yet wired to DAP)
 
 ## Formatting (conform.nvim)
 - Manual format: `<leader>cf` (LazyVim's built-in, normal + visual mode)

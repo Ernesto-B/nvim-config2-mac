@@ -10,8 +10,8 @@ return {
         require("nvim-treesitter.configs").setup({
             ensure_installed = {
                 "bash", "c", "cmake", "cpp", "css", "csv",
-                "dockerfile", "go", "gomod", "html", "java",
-                "javascript", "json", "lua", "markdown",
+                "dockerfile", "go", "gomod", "gosum", "gowork",
+                "html", "java", "javascript", "json", "lua", "markdown",
                 "proto", "python", "sql", "terraform", "typescript", "yaml",
             },
             auto_install = true,

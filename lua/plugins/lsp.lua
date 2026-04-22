@@ -57,6 +57,41 @@ return {
                         client.server_capabilities.documentFormattingProvider = false
                     end,
                 },
+                gopls = {
+                    settings = {
+                        gopls = {
+                            -- staticcheck bundles the most valuable Go lints
+                            -- (SA series). gopls runs them as analyses, so
+                            -- you get diagnostics in-editor without a separate tool.
+                            staticcheck = true,
+                            analyses = {
+                                unusedparams = true,
+                                unusedwrite = true,
+                                useany = true,
+                                nilness = true,
+                                -- fieldalignment: off by default — noisy on
+                                -- non-perf-critical structs. Flip on per-project
+                                -- if you're optimizing memory layout.
+                                fieldalignment = false,
+                            },
+                            hints = {
+                                assignVariableTypes = true,
+                                compositeLiteralFields = true,
+                                compositeLiteralTypes = true,
+                                constantValues = true,
+                                functionTypeParameters = true,
+                                parameterNames = true,
+                                rangeVariableTypes = true,
+                            },
+                            completeUnimported = true,  -- autocomplete packages you haven't imported yet
+                            usePlaceholders = true,     -- placeholder args in completion snippets
+                            semanticTokens = true,
+                        },
+                    },
+                },
+                -- golangci-lint diagnostics surfaced via LSP. Requires the
+                -- `golangci-lint` binary in PATH (installed via Mason).
+                golangci_lint_ls = {},
             },
         },
     },
