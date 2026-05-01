@@ -91,7 +91,20 @@ return {
                 },
                 -- golangci-lint diagnostics surfaced via LSP. Requires the
                 -- `golangci-lint` binary in PATH (installed via Mason).
-                golangci_lint_ls = {},
+                -- Drop golangci-lint's `typecheck` source: it duplicates
+                -- gopls's `compiler` diagnostics for the same build errors.
+                golangci_lint_ls = {
+                    handlers = {
+                        ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+                            if result and result.diagnostics then
+                                result.diagnostics = vim.tbl_filter(function(d)
+                                    return d.source ~= "typecheck"
+                                end, result.diagnostics)
+                            end
+                            return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
+                        end,
+                    },
+                },
             },
         },
     },

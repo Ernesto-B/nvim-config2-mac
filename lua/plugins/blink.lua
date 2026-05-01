@@ -12,6 +12,18 @@ return {
         local row = cursor[1] - 1
         local col = math.max(0, cursor[2] - 1)
 
+        -- Lexical fast-path: catches the moment a user *just* typed a comment
+        -- marker (e.g. `//` in Go), before treesitter has re-parsed the buffer.
+        -- Without this, blink's `path` source fires on the first `/` and
+        -- offers filesystem suggestions for the rest of the comment.
+        local line = vim.api.nvim_get_current_line()
+        local before = line:sub(1, cursor[2])
+        local line_comment = vim.bo.commentstring:gsub("%%s.*", "")
+        line_comment = vim.trim(line_comment)
+        if line_comment ~= "" and before:find(vim.pesc(line_comment), 1, true) then
+          return false
+        end
+
         -- Walk up the treesitter node tree from the cursor. If we hit an
         -- interpolation node first (Python f-string `{...}`, JS template `${...}`),
         -- allow completions. If we hit a string/comment first, suppress.

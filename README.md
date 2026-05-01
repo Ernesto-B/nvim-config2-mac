@@ -132,10 +132,11 @@ _Rename (LSP-aware — scope- and import-aware)_
 
 ### Commenting & Diagnostics
 - `[d` / `]d` Prev / next diagnostic
+- `<leader>ud` Toggle diagnostics (LSP errors/warnings inline + gutter signs) on/off globally
 - `gcc` Toggle comment (line)
 - `gco` / `gcO` Add comment below / above
 - `K` Hover documentation / LSP signature (bordered popup via noice)
-- `<C-d>` (insert mode) Toggle docs — blink completion docs or noice signature popup
+- `<C-d>` (insert mode) Context-aware docs/signature toggle. If the blink completion menu is open → toggles the docs side panel. Otherwise → dismisses any open noice float (e.g. signature popup). Opens signature if none up 
 
 ### Spelling
 - `<leader>us` Toggle spell check in current buffer
