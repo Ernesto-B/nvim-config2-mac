@@ -94,6 +94,11 @@ return {
                 -- Drop golangci-lint's `typecheck` source: it duplicates
                 -- gopls's `compiler` diagnostics for the same build errors.
                 golangci_lint_ls = {
+                    on_attach = function(client)
+                        -- golangci_lint_ls is diagnostics-only; disable symbol
+                        -- provider so it doesn't duplicate gopls symbols in pickers.
+                        client.server_capabilities.documentSymbolProvider = false
+                    end,
                     handlers = {
                         ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
                             if result and result.diagnostics then
